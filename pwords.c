@@ -6,7 +6,7 @@
 #include <pthread.h>
 
 
-pthread_mutex_t mtex;
+pthread_mutex_t m_tex;
 typedef struct dict {
   char *word;
   int count;
@@ -80,15 +80,15 @@ get_word( char *buf, int n, FILE *infile) {
 }
 
 #define MAXWORD 3500
-void * words(void * args){
+void * dic_words(void * args){
 
   FILE * infile = (FILE *) args;
   
-  char wordbuf[MAXWORD];
+  char w_buf[MAXWORD];
   
-  while(get_word( wordbuf, MAXWORD, infile ) ) {
+  while(get_word( w_buf, MAXWORD, infile ) ) {
 
-    d = insert_word(d, wordbuf); 
+    d = insert_word(d, w_buf); 
   }
  
 }
@@ -96,7 +96,7 @@ void * words(void * args){
 int
 main( int argc, char *argv[] ) {
 
-if(pthread_mutex_init(&mtex,NULL)!=0){
+if(pthread_mutex_init(&m_tex,NULL)!=0){
 printf("Mutex lock not created...\n");
 return 1;
 }
@@ -121,22 +121,22 @@ return 1;
 
 pthread_t thr_1, thr_2, thr_3, thr_4, thr_5, thr_6;
 
-pthread_create(&thr_1, NULL, &words, infile);
+pthread_create(&thr_1, NULL, &dic_words, infile);
 pthread_join(thr_1, NULL);
 
-pthread_create(&thr_2, NULL, &words, infile);
+pthread_create(&thr_2, NULL, &dic_words, infile);
 pthread_join(thr_2, NULL);
 
-pthread_create(&thr_3, NULL, &words, infile);
+pthread_create(&thr_3, NULL, &dic_words, infile);
 pthread_join(thr_3, NULL);
 
-pthread_create(&thr_4, NULL, &words, infile);
+pthread_create(&thr_4, NULL, &dic_words, infile);
 pthread_join(thr_4, NULL);
 
-pthread_create(&thr_5, NULL, &words, infile);
+pthread_create(&thr_5, NULL, &dic_words, infile);
 pthread_join(thr_5, NULL);
 
-pthread_create(&thr_6, NULL, &words, infile);
+pthread_create(&thr_6, NULL, &dic_words, infile);
 pthread_join(thr_6, NULL);
 
 print_dict(d);
